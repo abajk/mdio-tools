@@ -633,7 +633,7 @@ int mdio_xfer_timeout(const char *bus, struct mdio_prog *prog,
 int mdio_xfer(const char *bus, struct mdio_prog *prog,
 	      mdio_xfer_cb_t cb, void *arg)
 {
-	return mdio_xfer_timeout(bus, prog, cb, arg, 1000);
+	return mdio_xfer_timeout(bus, prog, cb, arg, 10000);
 }
 
 int mdio_for_each(const char *match,
