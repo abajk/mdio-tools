@@ -285,7 +285,7 @@ static int mdio_nl_validate_prog(const struct nlattr *attr,
 static const struct nla_policy mdio_nl_policy[MDIO_NLA_MAX + 1] = {
 	[MDIO_NLA_UNSPEC]  = { .type = NLA_UNSPEC, },
 	[MDIO_NLA_BUS_ID]  = { .type = NLA_STRING, .len = MII_BUS_ID_SIZE },
-	[MDIO_NLA_TIMEOUT] = NLA_POLICY_MAX(NLA_U16, 10 * MSEC_PER_SEC),
+	[MDIO_NLA_TIMEOUT] = NLA_POLICY_MAX(NLA_U16, 65 * MSEC_PER_SEC),
 	[MDIO_NLA_PROG]    = NLA_POLICY_VALIDATE_FN(NLA_BINARY,
 						    mdio_nl_validate_prog,
 						    0x1000),

@@ -42,7 +42,7 @@ static const struct mdio_driver xrs_driver = {
 	.write = xrs_write,
 };
 
-int xrs_exec(const char *bus, int argc, char **argv)
+int xrs_exec(const char *bus, int argc, char **argv, int timeout)
 {
 	struct xrs_device xdev = {
 		.dev = {
@@ -66,6 +66,6 @@ int xrs_exec(const char *bus, int argc, char **argv)
 	if (!arg)
 		return 1;
 
-	return mdio_common_exec(&xdev.dev, argc, argv);
+	return mdio_common_exec(&xdev.dev, argc, argv, timeout);
 }
 DEFINE_CMD("xrs", xrs_exec);

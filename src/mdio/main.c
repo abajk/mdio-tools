@@ -17,6 +17,7 @@ int usage(int rc, FILE *fp)
 	      "\n"
 	      "OPTIONS\n"
 	      "  -h   This help text\n"
+	      "  -t   Timeout value\n"
 	      "  -v   Show verision and contact information\n"
 	      "\n"
 	      "Bus names may be abbreviated using glob(3) syntax, i.e. \"fixed*\"\n"
@@ -65,7 +66,7 @@ int usage(int rc, FILE *fp)
 	      "    DATA: u16\n"
 	      "    MASK: u16\n"
 	      "\n"
- 	      "  bench REG [DATA]\n"
+	      "  bench REG [DATA]\n"
 	      "    Benchmark read performance. If DATA is supplied, it is written to REG,\n"
 	      "    otherwise the current value in REG is read. REG is then read 1000\n"
 	      "    times. Any unexpected values are reported, along with the total time.\n"
@@ -124,12 +125,16 @@ int main(int argc, char **argv)
 {
 	struct cmd *cmd;
 	char *arg, *bus;
+	unsigned long long timeout = 0;
 	int opt;
 
-	while ((opt = getopt(argc, argv, "hv")) != -1) {
+	while ((opt = getopt(argc, argv, "ht:v")) != -1) {
 		switch (opt) {
 		case 'h':
 			return usage(0, stdout);
+		case 't':
+			timeout = atoi(optarg);
+			break;
 		case 'v':
 			return version();
 		default:
@@ -170,14 +175,14 @@ int main(int argc, char **argv)
 	for (cmd = &cmds_start; cmd < &cmds_end; cmd++) {
 		if (!strcmp(cmd->name, arg)) {
 			argv_pop(&argc, &argv);
-			return cmd->exec(bus, argc, argv) ? 1 : 0;
+			return cmd->exec(bus, argc, argv, timeout) ? 1 : 0;
 		}
 	}
 
 	/* Allow the driver name to be omitted in the common phy/mmd
 	 * case. */
 	if (strchr(arg, ':'))
-		return mmd_exec(bus, argc, argv) ? 1 : 0;
+		return mmd_exec(bus, argc, argv, timeout) ? 1 : 0;
 	else
-		return phy_exec(bus, argc, argv) ? 1 : 0;
+		return phy_exec(bus, argc, argv, timeout) ? 1 : 0;
 }

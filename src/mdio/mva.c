@@ -169,7 +169,7 @@ int mva_exec_status(struct mva_device *pdev, int argc, char **argv)
 	return 0;
 }
 
-int mva_exec(const char *bus, int argc, char **argv)
+int mva_exec(const char *bus, int argc, char **argv, int timeout)
 {
 	struct mva_device pdev = {
 		.dev = {
@@ -192,6 +192,6 @@ int mva_exec(const char *bus, int argc, char **argv)
 	if (!arg || !strcmp(arg, "status"))
 		return mva_exec_status(&pdev, argc, argv);
 
-	return mdio_common_exec(&pdev.dev, argc, argv);
+	return mdio_common_exec(&pdev.dev, argc, argv, timeout);
 }
 DEFINE_CMD("mva", mva_exec);

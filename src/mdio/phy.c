@@ -82,7 +82,7 @@ int phy_exec_status(struct phy_device *pdev, int argc, char **argv)
 	return 0;
 }
 
-int phy_exec(const char *bus, int argc, char **argv)
+int phy_exec(const char *bus, int argc, char **argv, int timeout)
 {
 	struct phy_device pdev = {
 		.dev = {
@@ -106,7 +106,7 @@ int phy_exec(const char *bus, int argc, char **argv)
 	if (!arg || !strcmp(arg, "status"))
 		return phy_exec_status(&pdev, argc, argv);
 
-	return mdio_common_exec(&pdev.dev, argc, argv);
+	return mdio_common_exec(&pdev.dev, argc, argv, timeout);
 }
 DEFINE_CMD("phy", phy_exec);
 
@@ -196,7 +196,7 @@ int mmd_exec_status(struct phy_device *pdev, int argc, char **argv)
 }
 
 int mmd_exec_with(const struct mdio_driver *drv,
-		  const char *bus, int argc, char **argv)
+		  const char *bus, int argc, char **argv, int timeout)
 {
 	struct phy_device pdev = {
 		.dev = {
@@ -225,12 +225,12 @@ int mmd_exec_with(const struct mdio_driver *drv,
 	if (!arg || !strcmp(arg, "status"))
 		return mmd_exec_status(&pdev, argc, argv);
 
-	return mdio_common_exec(&pdev.dev, argc, argv);
+	return mdio_common_exec(&pdev.dev, argc, argv, timeout);
 }
 
-int mmd_exec(const char *bus, int argc, char **argv)
+int mmd_exec(const char *bus, int argc, char **argv, int timeout)
 {
-	return mmd_exec_with(&phy_driver, bus, argc, argv);
+	return mmd_exec_with(&phy_driver, bus, argc, argv, timeout);
 }
 DEFINE_CMD("mmd", mmd_exec);
 
@@ -279,8 +279,8 @@ static const struct mdio_driver mmd_c22_driver = {
 	.write = mmd_c22_write,
 };
 
-int mmd_c22_exec(const char *bus, int argc, char **argv)
+int mmd_c22_exec(const char *bus, int argc, char **argv, int timeout)
 {
-	return mmd_exec_with(&mmd_c22_driver, bus, argc, argv);
+	return mmd_exec_with(&mmd_c22_driver, bus, argc, argv, timeout);
 }
 DEFINE_CMD("mmd-c22", mmd_c22_exec);

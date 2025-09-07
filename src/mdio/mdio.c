@@ -435,7 +435,7 @@ int mdio_common_bench_cb(uint32_t *data, int len, int err, void *_start)
 	return err;
 }
 
-int mdio_common_bench_exec(struct mdio_device *dev, int argc, char **argv)
+int mdio_common_bench_exec(struct mdio_device *dev, int argc, char **argv, int timeout)
 {
 	struct mdio_prog prog = MDIO_PROG_EMPTY;
 	struct timespec start;
@@ -483,7 +483,8 @@ int mdio_common_bench_exec(struct mdio_device *dev, int argc, char **argv)
 	mdio_prog_push(&prog, INSN(JNE, REG(6), IMM(1000), GOTO(prog.len, loop)));
 
 	clock_gettime(CLOCK_MONOTONIC, &start);
-	err = mdio_xfer_timeout(dev->bus, &prog, mdio_common_bench_cb, &start, 10000);
+	err = mdio_xfer_timeout(dev->bus, &prog, mdio_common_bench_cb, &start,
+				timeout > 0 ? timeout * 1000 : 10000);
 	free(prog.insns);
 	if (err) {
 		fprintf(stderr, "ERROR: Bench operation failed (%d)\n", err);
@@ -556,7 +557,7 @@ int mdio_common_dump_exec(struct mdio_device *dev, int argc, char **argv)
 	return 0;
 }
 
-int mdio_common_exec(struct mdio_device *dev, int argc, char **argv)
+int mdio_common_exec(struct mdio_device *dev, int argc, char **argv, int timeout)
 {
 	if (!argc)
 		return 1;
@@ -566,7 +567,7 @@ int mdio_common_exec(struct mdio_device *dev, int argc, char **argv)
 		return mdio_common_raw_exec(dev, argc, argv);
 	} else if (!strcmp(argv[0], "bench")) {
 		argv_pop(&argc, &argv);
-		return mdio_common_bench_exec(dev, argc, argv);
+		return mdio_common_bench_exec(dev, argc, argv, timeout);
 	} else if (!strcmp(argv[0], "dump")) {
 		argv_pop(&argc, &argv);
 		return mdio_common_dump_exec(dev, argc, argv);

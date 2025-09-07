@@ -52,7 +52,7 @@ static inline char *argv_pop(int *argcp, char ***argvp)
 
 struct cmd {
 	const char *name;
-	int (*exec)(const char *bus, int argc, char **argv);
+	int (*exec)(const char *bus, int argc, char **argv, int timeout);
 };
 
 // Derived from https://stackoverflow.com/a/4152185
@@ -152,12 +152,13 @@ struct mdio_driver {
 			 uint32_t *val, uint32_t *mask);
 };
 
-int mdio_common_exec(struct mdio_device *dev, int argc, char **argv);
+int mdio_common_exec(struct mdio_device *dev, int argc, char **argv,
+		     int timeout);
 
 int bus_status(const char *bus);
 int bus_list(void);
 
-int phy_exec(const char *bus, int argc, char **argv);
-int mmd_exec(const char *bus, int argc, char **argv);
+int phy_exec(const char *bus, int argc, char **argv, int timeout);
+int mmd_exec(const char *bus, int argc, char **argv, int timeout);
 
 #endif	/* _LIBMDIO_H */

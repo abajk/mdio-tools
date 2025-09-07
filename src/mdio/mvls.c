@@ -515,7 +515,7 @@ struct mdio_driver mvls_driver = {
 	.parse_reg = mvls_parse_reg,
 };
 
-static int mvls_exec(const char *bus, int argc, char **argv)
+static int mvls_exec(const char *bus, int argc, char **argv, int timeout)
 {
 	struct mvls_device mdev = {
 		.dev = {
@@ -545,6 +545,6 @@ static int mvls_exec(const char *bus, int argc, char **argv)
 	if (!strcmp(arg, "lag"))
 		return mvls_lag_exec(&mdev.dev, argc, argv);
 
-	return mdio_common_exec(&mdev.dev, argc, argv);
+	return mdio_common_exec(&mdev.dev, argc, argv, timeout);
 }
 DEFINE_CMD("mvls", mvls_exec);
