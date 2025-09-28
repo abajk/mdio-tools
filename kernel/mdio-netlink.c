@@ -288,7 +288,7 @@ static const struct nla_policy mdio_nl_policy[MDIO_NLA_MAX + 1] = {
 	[MDIO_NLA_TIMEOUT] = NLA_POLICY_MAX(NLA_U16, 10 * MSEC_PER_SEC),
 	[MDIO_NLA_PROG]    = NLA_POLICY_VALIDATE_FN(NLA_BINARY,
 						    mdio_nl_validate_prog,
-						    0x1000),
+						    0x10000),
 	[MDIO_NLA_DATA]    = { .type = NLA_NESTED },
 	[MDIO_NLA_ERROR]   = { .type = NLA_S32, },
 };
