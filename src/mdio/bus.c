@@ -12,14 +12,15 @@ static int bus_status_cb(uint32_t *data, int len, int err, void *_null)
 	if (len != MDIO_DEV_MAX * 3)
 		return 1;
 
-	printf("\e[7m%4s  %10s  %4s\e[0m\n", "DEV", "PHY-ID", "LINK");
+	printf("\e[7m%4s  %10s  %4s  %6s\e[0m\n", "DEV", "PHY-ID", "LINK", "MODE");
 	for (dev = 0; dev < MDIO_DEV_MAX; dev++, data += 3) {
 		if (data[1] == 0xffff && data[2] == 0xffff)
 			continue;
 
-		printf("0x%2.2x  0x%8.8x  %s\n", dev,
+		printf("0x%2.2x  0x%8.8x  %s  %s\n", dev,
 		       (data[1] << 16) | data[2],
-		       (data[0] & BMSR_LSTATUS) ? "up" : "down");
+		       (data[0] & BMSR_LSTATUS) ? "up" : "down",
+		       "c22");
 	}
 
 	return err;
